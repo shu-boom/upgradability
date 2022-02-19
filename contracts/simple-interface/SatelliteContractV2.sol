@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-import "./../interfaces/ILogic.sol";
+import "./../../interfaces/simple-interface/ILogic.sol";
 
 contract SatelliteContractV1 is ILogic {
 
