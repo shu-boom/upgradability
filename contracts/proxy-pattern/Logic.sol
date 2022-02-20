@@ -2,17 +2,17 @@
 pragma solidity ^0.8.0;
 
 contract Logic {
-    bytes32 myBytes;
+    uint256 myInt;
 
     constructor(){
-        myBytes = "HelloWorld";
+        myInt = 10;
     }
 
-    function getMyBytes() external view returns(bytes32){
-        return myBytes;
+    function getMyInt() external view returns(uint256){
+        return myInt;
     }
 
-    function setMyBytes(bytes32 _myBytes) external {
-        myBytes = _myBytes;
+    function setMyInt(uint256 _myInt) external {
+        myInt = _myInt;
     }
 }
