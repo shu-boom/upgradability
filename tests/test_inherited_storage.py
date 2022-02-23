@@ -1,23 +1,43 @@
 from brownie import LogicV1, LogicV2, Proxy, CommonStorage, Contract, accounts
 
 def deploy_contracts():
-    logic_tx = LogicV1.deploy({"from": accounts[0]})
-    proxy_tx = Proxy.deploy({"from": accounts[0]})
-    proxy_tx = CommonStorage.deploy({"from": accounts[0]})
-    proxy_tx.setImplementationAddress(logic_tx.address)
-    return (proxy_tx, logic_tx.address)
+    logicv1 = LogicV1.deploy({"from": accounts[0]})
+    proxy = Proxy.deploy({"from": accounts[0]})
+    proxy.upgradeTo(logicv1.address)
+    return (proxy, logicv1)
 
-# def test_proxy_pattern_implementation_equals_to_logic_address():
-#     (proxy, logicAddress) = deploy_contracts()
-#     assert proxy.getImplementationAddress() == logicAddress
+def deploy_new_logic():
+    logicv2 = LogicV2.deploy({"from": accounts[0]})
+    proxy = Proxy[-1]
+    proxy.upgradeTo(logicv2.address)
+    return (proxy, logicv2)
+
+def test_proxy_pattern_implementation_equals_to_logic_address():
+    (proxy, logic) = deploy_contracts()
+    assert proxy.getImplementationAddress() == logic.address
     
-# def test_can_get_value_from_implementation():
-#     (proxy, logicAddress) = deploy_contracts()
-#     proxy_logic = Contract.from_abi("Logic", proxy.address, Logic.abi)
-#     assert proxy_logic.getMyInt() == 10
-    
-# def test_can_set_value_from_proxy():
-#     (proxy, logicAddress) = deploy_contracts()
-#     proxy_logic = Contract.from_abi("Logic", proxy.address, Logic.abi)
-#     proxy_logic.setMyInt(20, {"from": accounts[0]})
-#     assert proxy.getImplementationAddress() == logicAddress
+def test_can_set_and_get_names_from_logicv1():
+    (proxy, logicv1) = deploy_contracts()
+    proxy_logicv1 = Contract.from_abi("LogicV1", proxy.address, logicv1.abi)
+    proxy_logicv1.setFirstName("John", {"from": accounts[0]})
+    proxy_logicv1.setLastName("Doe", {"from": accounts[0]})
+    assert proxy_logicv1.getFirstName() == "John"
+    assert proxy_logicv1.getLastName() == "Doe"
+
+def test_can_set_value_from_proxy():
+    (proxy, logicv2) = deploy_new_logic()
+    assert proxy.getImplementationAddress() == logicv2.address
+
+def test_can_set_and_get_names_from_logicv2():
+    (proxy, logicv2) = deploy_contracts()
+    proxy_logicv2 = Contract.from_abi("LogicV2", proxy.address, logicv2.abi)
+    proxy_logicv2.setFirstName("Paul", {"from": accounts[0]})
+    proxy_logicv2.setLastName("Walker", {"from": accounts[0]})
+    assert proxy_logicv2.getFirstName() == "Paul"
+    assert proxy_logicv2.getLastName() == "Walker"
+
+def test_can_get_and_set_age_from_proxy():
+    (proxy, logicv2) = deploy_new_logic()
+    proxy_logicv2 = Contract.from_abi("LogicV2", proxy.address, logicv2.abi)
+    proxy_logicv2.setAge(10, {"from": accounts[0]})
+    assert proxy_logicv2.getAge() == 10
