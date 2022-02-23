@@ -4,13 +4,17 @@ import "./CommonStorage.sol";
 
 contract Proxy is CommonStorage{
 
+    constructor() {
+        owner = msg.sender;
+    }
+
     function upgradeTo(address _implementation) public {
         require(msg.sender == owner, "Only Owner");
         implementation = _implementation;
     }
 
     fallback() external{
-        implementation = getImplementation();
+        implementation = getImplementationAddress();
         assembly {
             let ptr:=mload(0x40)
             calldatacopy(ptr, 0, calldatasize())

@@ -4,19 +4,19 @@ import "./CommonStorage.sol";
 
 contract LogicV1 is CommonStorage {
 
-    function getFirstName() external view returns(bytes32){
+    function getFirstName() external view returns(string memory){
         return firstName;
     }
 
-    function getLastName() external view returns(bytes32){
+    function getLastName() external view returns(string memory){
         return lastName;
     }
 
-    function setFirstName(bytes32 _firstName) external {
+    function setFirstName(string calldata _firstName) external {
         firstName = _firstName;
     }
 
-    function setLastName(bytes32 _lastName) external {
+    function setLastName(string calldata _lastName) external {
         lastName = _lastName;
     }
 }
