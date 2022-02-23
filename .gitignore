@@ -1,0 +1,7 @@
+build/
+build/*
+.pytest_cache
+.env
+build
+__pycache__
+__init__.py
