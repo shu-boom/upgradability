@@ -1,9 +1,9 @@
-from brownie import Logic, Proxy, accounts, Contract
+from brownie import Logic, SimpleProxy, accounts, Contract
 import pytest
 
 def deploy_contracts():
     logic_tx = Logic.deploy({"from": accounts[0]})
-    proxy_tx = Proxy.deploy({"from": accounts[0]})
+    proxy_tx = SimpleProxy.deploy({"from": accounts[0]})
     proxy_tx.setImplementationAddress(logic_tx.address)
     return (proxy_tx, logic_tx.address)
 
