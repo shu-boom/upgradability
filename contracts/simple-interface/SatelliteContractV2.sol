@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 import "./../../interfaces/simple-interface/ILogic.sol";
 
-contract SatelliteContractV1 is ILogic {
+contract SatelliteContractV2 is ILogic {
 
     ILogic.User logic;
     function getFirstName() override(ILogic) external view returns(bytes32){
